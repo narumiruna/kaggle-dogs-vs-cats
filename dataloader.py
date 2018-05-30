@@ -5,6 +5,9 @@ from PIL import Image
 from torch.utils import data
 from torchvision import transforms
 
+from torch.utils import data
+from torch.utils.data.dataset import random_split
+
 
 def pil_loader(f):
     with open(f, 'rb') as fp:
@@ -37,16 +40,35 @@ class DogsVsCats(data.Dataset):
         return len(self.samples)
 
 
-def test():
+def get_dataloader(size, root, batch_size, valid_ratio=0.2, num_workers=0):
     transform = transforms.Compose(
-        [transforms.RandomResizedCrop(224),
+        [transforms.RandomResizedCrop(size),
          transforms.ToTensor()])
-    dataset = DogsVsCats('data', transform=transform)
-    loader = data.DataLoader(dataset, batch_size=128, shuffle=True)
-    for x, y in loader:
-        print(x.size())
-        print(y.size())
-        break
+
+    dataset = DogsVsCats(root, transform=transform)
+
+    # split dataset
+    n_samples = len(dataset)
+    n_valid_samples = int(len(dataset) * valid_ratio)
+    train_set, valid_set = random_split(
+        dataset, [n_samples - n_valid_samples, n_valid_samples])
+
+    train_loader = data.DataLoader(
+        train_set, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+    valid_loader = data.DataLoader(
+        valid_set,
+        batch_size=batch_size,
+        shuffle=False,
+        num_workers=num_workers)
+
+    return train_loader, valid_loader
+
+
+def test():
+    train_loader, _ = get_dataloader(224, 'data', 128)
+    x, y = next(iter(train_loader))
+    print(x.size())
+    print(y.size())
 
 
 if __name__ == '__main__':
