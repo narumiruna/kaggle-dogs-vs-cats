@@ -24,4 +24,4 @@ class Trainer(object):
             loss.backward()
             self.optimizer.step()
 
-            print('loss: {:.6f}'.format(loss.item()))
+            print('loss: {:.6f}'.format(loss.data.item()))
