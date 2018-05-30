@@ -20,7 +20,7 @@ def main():
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    net = Net(size=config.size)
+    net = Net(size=config.size).to(device)
     optimizer = optim.Adam(net.parameters(), lr=config.lr)
 
     train_loader, valid_loader = get_dataloader(
