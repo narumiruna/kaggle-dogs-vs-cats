@@ -31,6 +31,6 @@ class Trainer(object):
             correct = y.data.eq(output.data.argmax(dim=1)).sum()
 
             train_loss.update(loss.data.item(), number=x.size(0))
-            train_acc.update(correct, number=x.size(0))
+            train_acc.update(correct.item(), number=x.size(0))
 
         return train_loss.average, train_acc.accuracy
