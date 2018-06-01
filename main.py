@@ -30,7 +30,10 @@ def main():
 
     trainer = Trainer(net, optimizer, train_loader, valid_loader, device)
     for epoch in range(config.epochs):
-        trainer.train()
+        train_loss, train_acc = trainer.train()
+        print('Train epoch: {}/{},'.format(epoch + 1, config.epochs),
+              'train loss: {:.6f},'.format(train_loss),
+              'train acc: {:.6f}.'.format(train_acc))
 
 
 if __name__ == '__main__':
