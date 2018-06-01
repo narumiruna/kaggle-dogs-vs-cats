@@ -7,10 +7,10 @@ class Average(object):
     def update(self, value, number=1):
         self.sum += value * number
         self.count += number
-        self.average = self.sum / self.count
 
-    def __call__(self):
-        return self.average
+    @property
+    def average(self):
+        return self.sum / self.count
 
 
 class Accuracy(object):
@@ -22,7 +22,7 @@ class Accuracy(object):
     def update(self, correct, number=1):
         self.correct += correct
         self.count += number
-        self.accuracy = self.correct / self.count
 
-    def __call__(self):
-        return self.accuracy
+    @property
+    def accuracy(self):
+        return self.correct / self.count
