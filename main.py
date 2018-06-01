@@ -10,7 +10,7 @@ import torch
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--batch-size', type=int, default=128)
+    parser.add_argument('--batch-size', type=int, default=32)
     parser.add_argument('--lr', type=float, default=1e-3)
     parser.add_argument('--size', type=int, default=224)
     parser.add_argument('--root', type=str, default='data')
