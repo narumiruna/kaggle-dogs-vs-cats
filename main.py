@@ -10,9 +10,9 @@ import torch
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--batch-size', type=int, default=32)
+    parser.add_argument('--batch-size', type=int, default=64)
     parser.add_argument('--lr', type=float, default=1e-3)
-    parser.add_argument('--size', type=int, default=224)
+    parser.add_argument('--size', type=int, default=64)
     parser.add_argument('--root', type=str, default='data')
     parser.add_argument('--valid-ratio', type=float, default=0.2)
     parser.add_argument('--epochs', type=int, default=20)
@@ -21,7 +21,7 @@ def main():
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    net = Net(size=config.size).to(device)
+    net = Net(size=config.size, num_repeats=(1, 2, 3)).to(device)
     optimizer = optim.Adam(net.parameters(), lr=config.lr)
 
     train_loader, valid_loader = get_dataloader(
@@ -31,9 +31,13 @@ def main():
     trainer = Trainer(net, optimizer, train_loader, valid_loader, device)
     for epoch in range(config.epochs):
         train_loss, train_acc = trainer.train()
-        print('Train epoch: {}/{},'.format(epoch + 1, config.epochs),
+        valid_loss, valid_acc = trainer.validate()
+
+        print('Epoch: {}/{},'.format(epoch + 1, config.epochs), \
               'train loss: {:.6f},'.format(train_loss),
-              'train acc: {:.6f}.'.format(train_acc))
+              'train acc: {:.6f}.'.format(train_acc),
+              'valid loss: {:.6f},'.format(valid_loss),
+              'valid acc: {:.6f}.'.format(valid_acc))
 
 
 if __name__ == '__main__':
