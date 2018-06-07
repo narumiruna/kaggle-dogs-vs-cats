@@ -2,10 +2,9 @@ import argparse
 
 import torch
 from torch import nn, optim
-from torchvision import models
 
 from dataloader import get_dataloader
-from model import Net
+from torchvision import models
 from trainer import Trainer
 
 
@@ -26,9 +25,6 @@ def main():
     net.fc = nn.Linear(net.fc.in_features, 2)
     net = net.to(device)
     optimizer = optim.Adam(net.fc.parameters(), lr=config.lr)
-
-    # net = Net(size=config.size, num_repeats=(1, 2, 3)).to(device)
-    # optimizer = optim.Adam(net.parameters(), lr=config.lr)
 
     train_loader, valid_loader = get_dataloader(
         config.size, config.root, config.batch_size, config.valid_ratio,
