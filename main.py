@@ -17,12 +17,17 @@ def main():
     parser.add_argument('--valid-ratio', type=float, default=0.2)
     parser.add_argument('--epochs', type=int, default=20)
     parser.add_argument('--num-workers', type=int, default=0)
+    parser.add_argument('--parallel', action='store_true')
     config = parser.parse_args()
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     net = models.resnet50(pretrained=True)
     net.fc = nn.Linear(net.fc.in_features, 2)
+
+    if config.parallel and torch.cuda.device_count() > 1:
+        net = nn.DataParallel(net)
+
     net = net.to(device)
     optimizer = optim.Adam(net.fc.parameters(), lr=config.lr)
 
