@@ -1,10 +1,11 @@
 import argparse
+import os
 
 import torch
 from torch import nn, optim
+from torchvision import models
 
 from dataloader import get_dataloader
-from torchvision import models
 from trainer import Trainer
 
 
@@ -45,6 +46,10 @@ def main():
               'train acc: {:.6f}.'.format(train_acc),
               'valid loss: {:.6f},'.format(valid_loss),
               'valid acc: {:.6f}.'.format(valid_acc))
+
+        os.makedirs('models', exist_ok=True)
+        torch.save(net.state_dict(),
+                   'models/model_{:03d}.pth'.format(epoch + 1))
 
 
 if __name__ == '__main__':
